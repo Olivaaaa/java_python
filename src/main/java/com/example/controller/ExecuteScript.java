@@ -1,107 +1,68 @@
 package com.example.controller;
 
-import org.python.core.Py;
-import org.python.core.PySystemState;
-import org.python.util.PythonInterpreter;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
+import java.util.*;
 
 @Controller
 @RequestMapping("/executescript")
 public class ExecuteScript {
 
     @RequestMapping("/execpython")
-    public Object execPython(){
+    public Object execPython() throws IOException, InterruptedException {
 
-        File file = new File("G:\\java-python\\src\\main\\resources\\static\\process_data.py");
+        Runtime run = Runtime.getRuntime();
+        Process process = run.exec("cmd /c start /wait G:\\java-python\\src\\main\\resources\\static\\run.bat");
+        process.waitFor();
+        System.out.println("finishing");
 
-        if(file.exists()){
-            System.out.println("可以读取到非项目中脚本");
-        }else{
-            System.out.println("不可以读取到非项目中脚本");
-            return "不可以读取到非项目中脚本";
-        }
-
-
-        PythonInterpreter interpreter = new PythonInterpreter();
-
-        InputStream in = null;
-
-        try {
-            in = new FileInputStream("G:\\java-python\\src\\main\\resources\\static\\process_data.py");
-
-            PySystemState sys = Py.getSystemState();
-
-            sys.path.add("G:\\java-python\\src\\main\\resources\\static");
-
-            interpreter.execfile(in);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return "未找到文件";
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            if(null!=in){
-                try {
-                    in.close();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-            }
-            return "执行python脚本失败";
-        }
 
         return "执行python脚本成功";
     }
 
-//    @RequestMapping("/execpython")
-//    public Object execPython(){
-//
-//        File file = new File("G:\\java-python\\src\\main\\resources\\static\\test.py");
-//
-//        if(file.exists()){
-//            System.out.println("可以读取到非项目中脚本");
-//        }else{
-//            System.out.println("不可以读取到非项目中脚本");
-//            return "不可以读取到非项目中脚本";
-//        }
-//
-//
-//        PythonInterpreter interpreter = new PythonInterpreter();
-//
-//        InputStream in = null;
-//
-//        try {
-//            in = new FileInputStream("G:\\java-python\\src\\main\\resources\\static\\test.py");
-//
-//            PySystemState sys = Py.getSystemState();
-//
-//            sys.path.add("G:\\java-python\\src\\main\\resources\\static");
-//
-//            interpreter.execfile(in);
-//
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            return "未找到文件";
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//
-//            if(null!=in){
-//                try {
-//                    in.close();
-//                } catch (IOException e1) {
-//                    // TODO Auto-generated catch block
-//                    e1.printStackTrace();
-//                }
-//            }
-//            return "执行python脚本失败";
-//        }
-//
-//        return "执行python脚本成功";
-//    }
+    @RequestMapping(value = "/")
+    public String reader(Model model) throws FileNotFoundException {
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader("G:\\java-python\\src\\main\\resources\\static\\file\\OR.csv"));
+            reader.readLine();
+            String line = null;
+            List<Map<String, String>> resultList = new ArrayList<>();
+//            Map<String, String> result = new HashMap<String, String>();
+            while ((line = reader.readLine()) != null){
+                Map<String, String> result = new HashMap<String, String>();
+                String item[] = line.split(",");
+                String name = item[0];
+                System.out.println(name);
+                result.put("name", name);
+                String min = item[1];
+                result.put("min", min);
+                String max = item[2];
+                result.put("max", max);
+                String OR = item[item.length-1];
+                result.put("OR", OR);
+                resultList.add(result);
+            }
+            model.addAttribute("resultList", resultList);
+            System.out.println(resultList);
+
+    } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "index";
+    }
+
+    @RequestMapping("/test")
+    public String test(Model model){
+        List<String> list = new ArrayList<>();
+        list.add("a");
+        list.add("b");
+        model.addAttribute("list",list);
+
+        return "index";
+    }
 }
 

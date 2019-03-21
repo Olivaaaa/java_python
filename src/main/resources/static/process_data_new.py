@@ -1,3 +1,4 @@
+#encoding:utf-8
 import os
 import common
 import csv
@@ -29,7 +30,7 @@ def get_readmission(path, patient_id_list=None):
             selected_dict[item] = str(visit_dict[item])
         visit_dict = selected_dict
 
-    with open(path, 'w', encoding='utf-8-sig', newline="") as file:
+    with open(path, 'w+', encoding='utf-8-sig', newline="") as file:
         matrix_to_write = []
         csv_write = csv.writer(file)
         head = ['pat_id', 'visit_id', 'discharged_time']
@@ -45,7 +46,7 @@ def get_readmission(path, patient_id_list=None):
 
 
 def get_id_list(p):
-    id_l = pd.read_csv(p, encoding='UTF-8')
+    id_l = pd.read_csv(p, encoding='ISO-8859-1')
     col = ['pat_id']
     id_s = pd.DataFrame(id_l, columns=col)
     id_list = id_s['pat_id'].tolist()
@@ -53,7 +54,7 @@ def get_id_list(p):
 
 
 def get_visit_id(p):
-    visit_id = pd.read_csv(p, encoding='UTF-8')
+    visit_id = pd.read_csv(p, encoding='ISO-8859-1')
     col = ['visit_id']
     visit_s = pd.DataFrame(visit_id, columns=col)
     visit_list = visit_s['visit_id'].tolist()
@@ -140,6 +141,61 @@ def get_pharmacy(id_list, mapping_file, path):
     return angiotensin_dict
 
 
+# def get_diuretic(id_list, mapping_file, path):
+#     conn = common.get_connection()
+#     diuretic_name_map = dict()
+#     with open(mapping_file, 'r', encoding='gbk', newline="") as file:
+#         csv_reader = csv.reader(file)
+#         for line in csv_reader:
+#             for i in range(1, len(line)):
+#                 if len(line[i]) <= 1:
+#                     continue
+#                 diuretic_name_map[line[i]] = line[0]
+#
+#     diuretic_dict = dict()
+#     for patient_id in id_list:
+#         # diuretic_dict[patient_id] = {'保钾利尿剂': 0, '袢利尿剂': 0, '噻嗪类利尿剂': 0, '受体拮抗剂': 0}
+#         diuretic_dict[patient_id] = {'Potassium diuretic': 0, 'Urine diuretic': 0, 'Thiazide diuretic': 0, 'Receptor antagonist': 0}
+#     cursor = conn.cursor()
+#     sql = "select patient_id, order_text from orders temp1 where order_class = 'A' and " \
+#           "temp1.visit_id < (select temp2.maxid from (select patient_id, max(visit_id) as maxid " \
+#           "from orders group by patient_id) temp2 where temp1.patient_id = temp2.patient_id) "
+#     for row in cursor.execute(sql):
+#         patient_id, order_text = row
+#         if patient_id in id_list:
+#             for item in diuretic_name_map:
+#                 if order_text is not None and item in order_text:
+#                     normalized_name = diuretic_name_map[item]
+#                     if normalized_name == '保钾利尿剂':
+#                         diuretic_dict[patient_id]['Potassium diuretic'] = 1
+#                     if normalized_name == '袢利尿剂':
+#                         diuretic_dict[patient_id]['Urine diuretic'] = 1
+#                     if normalized_name == '噻嗪类利尿剂':
+#                         diuretic_dict[patient_id]['Thiazide diuretic'] = 1
+#                     if normalized_name == '受体拮抗剂':
+#                         diuretic_dict[patient_id]['Receptor antagonist'] = 1
+#
+#     with open(path, 'r', encoding='utf-8', newline="") as file:
+#         csv_reader = csv.reader(file)
+#         lines = []
+#         for i, line in enumerate(csv_reader):
+#             if i == 0:
+#                 line.append("Potassium diuretic")
+#                 line.append("Urine diuretic")
+#                 line.append("Thiazide diuretic")
+#                 line.append("Receptor antagonist")
+#             else:
+#                 patient_id = line[0]
+#                 result = diuretic_dict.get(patient_id, [-1, -1, -1, -1])
+#                 if isinstance(result, dict):
+#                     result = [result['Potassium diuretic'], result['Urine diuretic'], result['Thiazide diuretic'], result['Receptor antagonist']]
+#                 line.extend(result)
+#             lines.append(line)
+#
+#     with open(path, 'w', encoding='UTF-8', newline="") as file:
+#         writer = csv.writer(file)
+#         writer.writerows(lines)
+#     return diuretic_dict
 def get_diuretic(id_list, mapping_file, path):
     conn = common.get_connection()
     diuretic_name_map = dict()
@@ -153,7 +209,6 @@ def get_diuretic(id_list, mapping_file, path):
 
     diuretic_dict = dict()
     for patient_id in id_list:
-        # diuretic_dict[patient_id] = {'保钾利尿剂': 0, '袢利尿剂': 0, '噻嗪类利尿剂': 0, '受体拮抗剂': 0}
         diuretic_dict[patient_id] = {'Potassium diuretic': 0, 'Urine diuretic': 0, 'Thiazide diuretic': 0, 'Receptor antagonist': 0}
     cursor = conn.cursor()
     sql = "select patient_id, order_text from orders temp1 where order_class = 'A' and " \
@@ -165,16 +220,16 @@ def get_diuretic(id_list, mapping_file, path):
             for item in diuretic_name_map:
                 if order_text is not None and item in order_text:
                     normalized_name = diuretic_name_map[item]
-                    if normalized_name == 'Potassium diuretic':
+                    if normalized_name == '保钾利尿剂':
                         diuretic_dict[patient_id]['Potassium diuretic'] = 1
-                    if normalized_name == 'Urine diuretic':
+                    if normalized_name == '袢利尿剂':
                         diuretic_dict[patient_id]['Urine diuretic'] = 1
-                    if normalized_name == 'Thiazide diuretic':
+                    if normalized_name == '噻嗪类利尿剂':
                         diuretic_dict[patient_id]['Thiazide diuretic'] = 1
-                    if normalized_name == 'Receptor antagonist':
+                    if normalized_name == '受体拮抗剂':
                         diuretic_dict[patient_id]['Receptor antagonist'] = 1
 
-    with open(path, 'r', encoding='utf-8', newline="") as file:
+    with open(path, 'r', encoding='ISO-8859-1', newline="") as file:
         csv_reader = csv.reader(file)
         lines = []
         for i, line in enumerate(csv_reader):
@@ -191,7 +246,7 @@ def get_diuretic(id_list, mapping_file, path):
                 line.extend(result)
             lines.append(line)
 
-    with open(path, 'w', encoding='UTF-8', newline="") as file:
+    with open(path, 'w', encoding='ISO-8859-1', newline="") as file:
         writer = csv.writer(file)
         writer.writerows(lines)
     return diuretic_dict
@@ -210,7 +265,7 @@ def get_beta(id_list, mapping_file, path):
 
     beta_dict = dict()
     for patient_id in id_list:
-        beta_dict[patient_id] = {'Metoprolol': 0, 'Bisoprol': 0, '卡维地洛': 0}
+        beta_dict[patient_id] = {'Metoprolol': 0, 'Bisoprol': 0, 'Carvedilol': 0}
     cursor = conn.cursor()
     sql = "select patient_id, order_text from orders temp1 where order_class = 'A' and " \
           "temp1.visit_id < (select temp2.maxid from (select patient_id, max(visit_id) as maxid " \
@@ -221,14 +276,14 @@ def get_beta(id_list, mapping_file, path):
             for item in beta_dict:
                 if order_text is not None and item in order_text:
                     normalized_name = beta_name_map[item]
-                    if normalized_name == 'Metoprolol':
+                    if normalized_name == '美托洛尔':
                         beta_dict[patient_id]['Metoprolol'] = 1
-                    if normalized_name == 'Bisoprol':
+                    if normalized_name == '比索洛尔':
                         beta_dict[patient_id]['Bisoprol'] = 1
-                    if normalized_name == 'Carvedilol':
+                    if normalized_name == '卡维地洛':
                         beta_dict[patient_id]['Carvedilol'] = 1
 
-    with open(path, 'r', encoding='utf-8', newline="") as file:
+    with open(path, 'r', encoding='ISO-8859-1', newline="") as file:
         csv_reader = csv.reader(file)
         lines = []
         for i, line in enumerate(csv_reader):
@@ -244,7 +299,7 @@ def get_beta(id_list, mapping_file, path):
                 line.extend(result)
             lines.append(line)
 
-    with open(path, 'w', encoding='UTF-8', newline="") as file:
+    with open(path, 'w', encoding='ISO-8859-1', newline="") as file:
         writer = csv.writer(file)
         writer.writerows(lines)
     return beta_dict
@@ -286,7 +341,7 @@ def get_discharge_date(id_list, visit_list, path):
                 if row[0] in id_list and row[1] in visit_list:
                     admission_date_dict[row[0]] = row[2]
 
-    with open(path, 'r', encoding='UTF-8', newline="") as file:
+    with open(path, 'r', encoding='ISO-8859-1', newline="") as file:
         csv_reder = csv.reader(file)
         lines = []
         for i, line in enumerate(csv_reder):
@@ -296,7 +351,7 @@ def get_discharge_date(id_list, visit_list, path):
                 patient_id = line[0]
                 line.append(str(admission_date_dict.get(patient_id, -1)))
             lines.append(line)
-    with open(path, 'w', encoding='UTF-8', newline="") as file:
+    with open(path, 'w', encoding='ISO-8859-1', newline="") as file:
         writer = csv.writer(file)
         writer.writerows(lines)
     return admission_date_dict
@@ -328,7 +383,7 @@ def get_interval(path):
                 line.append(-1)
             lines.append(line)
 
-    with open(path, 'w', encoding='UTF-8', newline="") as file:
+    with open(path, 'w', encoding='ISO-8859-1', newline="") as file:
         writer = csv.writer(file)
         writer.writerows(lines)
 

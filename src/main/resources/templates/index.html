@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+</head>
+<body>
+
+<table cellspacing="0" cellpadding="0">
+    <tr th:each="result:${resultList}">
+            <td th:text="${result['name']}"></td>
+            <td th:text="${result['min']}"></td>
+            <td th:text="${result['max']}"></td>
+            <td th:text="${result['OR']}"></td>
+    </tr>
+</table>
+
+</body>
+</html>
