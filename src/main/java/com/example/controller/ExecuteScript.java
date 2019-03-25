@@ -3,7 +3,6 @@ package com.example.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
 import java.util.*;
@@ -56,13 +55,9 @@ public class ExecuteScript {
     }
 
     @RequestMapping("/test")
-    public String test(Model model){
-        List<String> list = new ArrayList<>();
-        list.add("a");
-        list.add("b");
-        model.addAttribute("list",list);
+    public String test(){
 
-        return "index";
+        return "dashboard";
     }
 }
 
