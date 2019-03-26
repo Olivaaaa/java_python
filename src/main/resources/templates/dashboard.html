@@ -10,8 +10,11 @@
   <title>Dashboard Template for Bootstrap</title>
   <!-- Bootstrap core CSS -->
   <link href="css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <!-- Custom styles for this template -->
-  <link href="css/dashboard.css" th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link href="css/dashboard.css" th:href="@{/css/dashboard.css}" rel="stylesheet">
   <style type="text/css">
     /* Chart.js */
 
@@ -73,34 +76,21 @@
           <div class="btn-group mr-2">
             <button class="btn btn-sm btn-outline-secondary">请你选择你要分析的药物</button>
           </div>
-            <!--<button class="btn btn-sm btn-outline-secondary dropdown-toggle">-->
-            <!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>-->
-            <!--This week-->
-            <!--</button>-->
 
+            <!--<div class="container">-->
+                <div class="dropdown">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        药物名称
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">ACEI</a>
+                        <a class="dropdown-item" href="#">ARB</a>
+                        <a class="dropdown-item" href="#">噻嗪类利尿剂</a>
+                        <a class="dropdown-item" href="#">呋塞米利尿剂</a>
+                    </div>
+                </div>
+            <!--</div>-->
         </div>
-          <div class="dropdown">
-              <button type="button" class="btn dropdown-toggle" id="dropdownMenu1"
-                      data-toggle="dropdown">
-                  药物名称
-                  <span class="caret-handle"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                  <li role="presentation" class="dropdown-header">下拉菜单标题</li>
-                  <li role="presentation">
-                      <a role="menuitem" tabindex="-1" href="#" >Java</a>
-                  </li>
-                  <li role="presentation">
-                      <a role="menuitem" tabindex="-1" href="#">数据挖掘</a>
-                  </li>
-                  <li role="presentation">
-                      <a role="menuitem" tabindex="-1" href="#">
-                          数据通信/网络
-                      </a>
-                  </li>
-              </ul>
-
-          </div>
       </div>
 
       <canvas class="my-4 chartjs-render-monitor" id="myChart" width="1076" height="454" style="display: block; width: 1076px; height: 454px;"></canvas>
@@ -111,11 +101,10 @@
 </div>
 
 <!-- Bootstrap core JavaScript
-================================================== -->
- Placed at the end of the document so the pages load faster
-<script type="text/javascript" src="js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<!--================================================== &ndash;&gt;-->
+<!--<script type="text/javascript" src="js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>-->
 <!--<script type="text/javascript" src="js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>-->
-<script type="text/javascript" src="js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+<!--<script type="text/javascript" src="js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>-->
 
 <!-- Icons -->
 <script type="text/javascript" src="js/feather.min.js" th:src="@{/js/feather.min.js}"></script>
