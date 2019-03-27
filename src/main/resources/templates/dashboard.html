@@ -13,11 +13,11 @@
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://echarts.baidu.com/dist/echarts.min.js"></script>
     <!-- Custom styles for this template -->
     <link href="css/dashboard.css" th:href="@{/css/dashboard.css}" rel="stylesheet">
   <style type="text/css">
     /* Chart.js */
-
     @-webkit-keyframes chartjs-render-animation {
       from {
         opacity: 0.99
@@ -43,14 +43,13 @@
   </style>
 
     <!-- 引入echart.js-->
-    <script type="text/javascript" src="js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
+    <!--<script type="text/javascript" src="js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>-->
+    <script type="text/javascript" src="https://echarts.baidu.com/dist/echarts.min.js"></script>
     <style>
         #div-a{
-            position: relative;
-            top: 20%;
-            margin-left: auto;
-            margin-right: auto;
-            bottom: 20%;
+            position: absolute;
+            top: 25%;
+            left: 30%;
         }
     </style>
 </head>
@@ -76,20 +75,52 @@
           <div class="btn-group mr-2">
             <button class="btn btn-sm btn-outline-secondary">请你选择你要分析的药物</button>
           </div>
-
-            <!--<div class="container">-->
+            <table hidden id="hiddenTable" cellspacing="0" cellpadding="0">
+                <tr th:each="result:${resultList}">
+                    <td th:text="${result['name']}"></td>
+                    <td th:text="${result['min']}"></td>
+                    <td th:text="${result['max']}"></td>
+                    <td th:text="${result['OR']}"></td>
+                </tr>
+            </table>
                 <div class="dropdown">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                         药物名称
+                        <span class="caret"></span>
                     </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">ACEI</a>
-                        <a class="dropdown-item" href="#">ARB</a>
-                        <a class="dropdown-item" href="#">噻嗪类利尿剂</a>
-                        <a class="dropdown-item" href="#">呋塞米利尿剂</a>
-                    </div>
+                    <ul class="dropdown-menu" role="menu" id="mydrop">
+                        <li role="presentation">
+                        <a id="ACEI" class="dropdown-item" href="#">ACEI</a>
+                        </li>
+                        <li role="presentation">
+                        <a id="ARB" class="dropdown-item" href="#">ARB</a>
+                        </li>
+                        <li role="presentation">
+                        <a id="Thiazide_diuretic" class="dropdown-item" href="#">Thiazide diuretic</a>
+                        </li>
+                        <li role="presentation">
+                        <a id="Urine_diuretic" class="dropdown-item" href="#">Urine diuretic</a>
+                        </li>
+                        <li role="presentation">
+                            <a class="dropdown-item disabled" href="#">Potassium diuretic</a>
+                        </li>
+                        <li role="presentation">
+                        <a class="dropdown-item disabled" href="#">ARNI</a>
+                        </li>
+                        <li role="presentation">
+                        <a class="dropdown-item disabled" href="#">Receptor antagonist</a>
+                        </li>
+                        <li role="presentation">
+                        <a class="dropdown-item disabled" href="#">Metoprolol</a>
+                        </li>
+                        <li role="presentation">
+                        <a class="dropdown-item disabled" href="#">Bisoprol</a>
+                        </li>
+                        <li role="presentation">
+                        <a class="dropdown-item disabled" href="#">Carvedilol</a>
+                        </li>
+                    </ul>
                 </div>
-            <!--</div>-->
         </div>
       </div>
 
@@ -100,123 +131,236 @@
   </div>
 </div>
 
-<!-- Bootstrap core JavaScript
-<!--================================================== &ndash;&gt;-->
-<!--<script type="text/javascript" src="js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>-->
-<!--<script type="text/javascript" src="js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>-->
-<!--<script type="text/javascript" src="js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>-->
-
 <!-- Icons -->
 <script type="text/javascript" src="js/feather.min.js" th:src="@{/js/feather.min.js}"></script>
 <script>
     feather.replace()
 </script>
-<script type="text/javascript" src="js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>
-<div id="div-a" style="width: 620px; height: 600px;"></div>
+<!--<script type="text/javascript" src="js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>-->
+<script type="text/javascript" src="https://echarts.baidu.com/dist/echarts.min.js"></script>
 <script>
-    var data = [
-        [1.286802858,1],
-        [2.077289678,2],
-        [3.205234498,3],
-        [2.80692693,4],
-    ]
+    $(function () {
+        $(".dropdown-menu li").on("click", function () {
+            var val = $(this).text();
+            $('#hiddenTable').find("tr").each(function () {
+                var tdArr = $(this).children();
+                var name = tdArr.eq(0).text();
+                var min = tdArr.eq(1).text();
+                var max = tdArr.eq(2).text();
+                var or = tdArr.eq(3).text();
+                console.log(name,min,max,or);
 
-    var chart = echarts.init(document.getElementById("div-a"));
-    option = {
-        title: {
-            text: 'Odds Ratio',
-        },
-        toolbox: {
-            show: true,
-            feature: {
-                mark: { show: true },
-                dataZoom: { show: true },
-                dataView: { show: true, readOnly: true },
-                restore: { show: true },
-                saveAsImage: { show: true }
-            }
-        },
-        xAxis: [
-            {
-                name:'置信区间',
-                type: 'value',
-                scale: false,
-                min: 0,
-                max: 4,
-                splitLine: {
-                    show: false
-                },
-                axisLabel: {
-                    formatter: '{value}'
+                if (name.trim() === val.trim()) {
+                    var data = [[or, 1],]
+
+                    var chart = echarts.init(document.getElementById("div-a"));
+                    option = {
+                        title: {
+                            text: 'Odds Ratio',
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                mark: { show: true },
+                                dataZoom: { show: true },
+                                dataView: { show: true, readOnly: true },
+                                restore: { show: true },
+                                saveAsImage: { show: true }
+                            }
+                        },
+                        xAxis: [
+                            {
+                                name:'置信区间',
+                                type: 'value',
+                                scale: true,
+                                min: 0,
+                                max: 9,
+                                splitNumber:9,
+                                splitLine: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    formatter: '{value}'
+                                }
+                            }
+                        ],
+                        yAxis: [
+                            {
+
+                                type: 'value',
+                                scale: false,
+                                min: 0,
+                                max: 2,
+                                minInterval: 1,
+                                splitLine: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    formatter: 'Type {value}'
+                                }
+                            }
+                        ],
+                        series: [
+                            {
+                                name: 'OR值',
+                                type: 'scatter',
+                                smooth:true,
+                                data: data,
+                                markLine: {
+                                    symbol: "none",
+                                    lineStyle:{
+                                        type: 'solid'
+                                    },
+                                    data: [
+                                        [{name:val, coord:[min,1]},
+                                            {coord:[max,1]}],
+                                        // [{name:'ARB', coord:[1.777632023,2]},
+                                        //     {coord:[2.427461,2]}],
+                                        // [{name:'Urine_diuretic', coord:[2.887181556,3]},
+                                        //     {coord:[3.558324264,3]}],
+                                        // [{name:'Thiazide_diuretic', coord:[2.399855107,4]},
+                                        //     {coord:[3.2830477,4]}],
+                                        [{ name: 'solid line', coord: [0, 60] },
+                                            { coord: [15, 60] }]
+                                    ]
+                                },
+
+                            },
+                            {
+                                name: 'OR值',
+                                type: 'scatter',
+                                smooth:false,
+                                data: data,
+                                markLine: {
+                                    symbol: "none",
+                                    lineStyle:{
+                                        // type: 'dotted',
+                                    },
+                                    data: [
+                                        [{name:'', coord:[1,0]},
+                                            {coord:[1,5]}],
+                                        [{ name: 'solid line', coord: [0, 60] },
+                                            { coord: [15, 60] }]
+                                    ]
+                                },
+                            }
+
+                        ],
+
+                    };
+                    chart.setOption(option);
+
                 }
-            }
-        ],
-        yAxis: [
-            {
+            })
 
-                type: 'value',
-                scale: false,
-                min: 0,
-                max: 5,
-                minInterval: 1,
-                splitLine: {
-                    show: false
-                },
-                axisLabel: {
-                    formatter: 'Type {value}'
-                }
-            }
-        ],
-        series: [
-            {
-                name: 'OR值',
-                type: 'scatter',
-                smooth:true,
-                data: data,
-                markLine: {
-                    symbol: "none",
-                    lineStyle:{
-                        type: 'solid'
-                    },
-                    data: [
-                        [{name:'ACEI', coord:[1.163416123,1]},
-                            {coord:[1.423275441,1]}],
-                        [{name:'ARB', coord:[1.777632023,2]},
-                            {coord:[2.427461,2]}],
-                        [{name:'Urine_diuretic', coord:[2.887181556,3]},
-                            {coord:[3.558324264,3]}],
-                        [{name:'Thiazide_diuretic', coord:[2.399855107,4]},
-                            {coord:[3.2830477,4]}],
-                        [{ name: 'solid line', coord: [0, 60] },
-                            { coord: [15, 60] }]
-                    ]
-                },
-
-            },
-            {
-                name: 'OR值',
-                type: 'scatter',
-                smooth:false,
-                data: data,
-                markLine: {
-                    symbol: "none",
-                    lineStyle:{
-                        // type: 'dotted',
-                    },
-                    data: [
-                        [{name:'', coord:[1,0]},
-                            {coord:[1,5]}],
-                        [{ name: 'solid line', coord: [0, 60] },
-                            { coord: [15, 60] }]
-                    ]
-                },
-            }
-
-        ],
-
-    };
-    chart.setOption(option);
+        })
+    })
 </script>
-</body>
+<div id="div-a" style="width: 900px; height: 600px;"></div>
+<!--<script>-->
+    <!--var data = [-->
+        <!--[1.286802858,1],-->
+        <!--[2.077289678,2],-->
+        <!--[3.205234498,3],-->
+        <!--[2.80692693,4],-->
+    <!--]-->
 
+    <!--var chart = echarts.init(document.getElementById("div-a"));-->
+    <!--option = {-->
+        <!--title: {-->
+            <!--text: 'Odds Ratio',-->
+        <!--},-->
+        <!--toolbox: {-->
+            <!--show: true,-->
+            <!--feature: {-->
+                <!--mark: { show: true },-->
+                <!--dataZoom: { show: true },-->
+                <!--dataView: { show: true, readOnly: true },-->
+                <!--restore: { show: true },-->
+                <!--saveAsImage: { show: true }-->
+            <!--}-->
+        <!--},-->
+        <!--xAxis: [-->
+            <!--{-->
+                <!--name:'置信区间',-->
+                <!--type: 'value',-->
+                <!--scale: false,-->
+                <!--min: 0,-->
+                <!--max: 4,-->
+                <!--splitLine: {-->
+                    <!--show: false-->
+                <!--},-->
+                <!--axisLabel: {-->
+                    <!--formatter: '{value}'-->
+                <!--}-->
+            <!--}-->
+        <!--],-->
+        <!--yAxis: [-->
+            <!--{-->
+
+                <!--type: 'value',-->
+                <!--scale: false,-->
+                <!--min: 0,-->
+                <!--max: 2,-->
+                <!--minInterval: 1,-->
+                <!--splitLine: {-->
+                    <!--show: false-->
+                <!--},-->
+                <!--axisLabel: {-->
+                    <!--formatter: 'Type {value}'-->
+                <!--}-->
+            <!--}-->
+        <!--],-->
+        <!--series: [-->
+            <!--{-->
+                <!--name: 'OR值',-->
+                <!--type: 'scatter',-->
+                <!--smooth:true,-->
+                <!--data: data,-->
+                <!--markLine: {-->
+                    <!--symbol: "none",-->
+                    <!--lineStyle:{-->
+                        <!--type: 'solid'-->
+                    <!--},-->
+                    <!--data: [-->
+                        <!--[{name:'ACEI', coord:[1.163416123,1]},-->
+                            <!--{coord:[1.423275441,1]}],-->
+                        <!--[{name:'ARB', coord:[1.777632023,2]},-->
+                            <!--{coord:[2.427461,2]}],-->
+                        <!--[{name:'Urine_diuretic', coord:[2.887181556,3]},-->
+                            <!--{coord:[3.558324264,3]}],-->
+                        <!--[{name:'Thiazide_diuretic', coord:[2.399855107,4]},-->
+                            <!--{coord:[3.2830477,4]}],-->
+                        <!--[{ name: 'solid line', coord: [0, 60] },-->
+                            <!--{ coord: [15, 60] }]-->
+                    <!--]-->
+                <!--},-->
+
+            <!--},-->
+            <!--{-->
+                <!--name: 'OR值',-->
+                <!--type: 'scatter',-->
+                <!--smooth:false,-->
+                <!--data: data,-->
+                <!--markLine: {-->
+                    <!--symbol: "none",-->
+                    <!--lineStyle:{-->
+                        <!--// type: 'dotted',-->
+                    <!--},-->
+                    <!--data: [-->
+                        <!--[{name:'', coord:[1,0]},-->
+                            <!--{coord:[1,5]}],-->
+                        <!--[{ name: 'solid line', coord: [0, 60] },-->
+                            <!--{ coord: [15, 60] }]-->
+                    <!--]-->
+                <!--},-->
+            <!--}-->
+
+        <!--],-->
+
+    <!--};-->
+    <!--chart.setOption(option);-->
+<!--</script>-->
+</body>
+<script th:src="@{/js/custom/select.js}"></script>
 </html>

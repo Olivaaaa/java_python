@@ -8,12 +8,13 @@
 
 <table cellspacing="0" cellpadding="0">
     <tr th:each="result:${resultList}">
-            <td th:text="${result['name']}"></td>
-            <td th:text="${result['min']}"></td>
-            <td th:text="${result['max']}"></td>
-            <td th:text="${result['OR']}"></td>
+            <td id="name" th:text="${result['name']}"></td>
+            <td id="min" th:text="${result['min']}"></td>
+            <td id="max" th:text="${result['max']}"></td>
+            <td id="OR" th:text="${result['OR']}"></td>
     </tr>
 </table>
 
 </body>
+<script th:src="@{/js/custom/select.js}"></script>
 </html>

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,7 +9,6 @@ import java.io.*;
 import java.util.*;
 
 @Controller
-@RequestMapping("/executescript")
 public class ExecuteScript {
 
     @RequestMapping("/execpython")
@@ -23,11 +23,11 @@ public class ExecuteScript {
         return "执行python脚本成功";
     }
 
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/executescript")
     public String reader(Model model) throws FileNotFoundException {
         try{
             BufferedReader reader = new BufferedReader(new FileReader("G:\\java-python\\src\\main\\resources\\static\\file\\OR.csv"));
-            reader.readLine();
+//            reader.readLine();
             String line = null;
             List<Map<String, String>> resultList = new ArrayList<>();
 //            Map<String, String> result = new HashMap<String, String>();
@@ -51,13 +51,12 @@ public class ExecuteScript {
     } catch (IOException e) {
             e.printStackTrace();
         }
-        return "index";
+        return "dashboard";
     }
 
-    @RequestMapping("/test")
-    public String test(){
-
-        return "dashboard";
+    @RequestMapping("/user")
+    public String user(){
+        return "test";
     }
 }
 
