@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <title>Dashboard Template for Bootstrap</title>
-  <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://echarts.baidu.com/dist/echarts.min.js"></script>
     <!-- Custom styles for this template -->
     <link href="css/dashboard.css" th:href="@{/css/dashboard.css}" rel="stylesheet">
-  <style type="text/css">
-    /* Chart.js */
-    @-webkit-keyframes chartjs-render-animation {
-      from {
-        opacity: 0.99
-      }
-      to {
-        opacity: 1
-      }
-    }
+    <style type="text/css">
+        /* Chart.js */
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
 
-    @keyframes chartjs-render-animation {
-      from {
-        opacity: 0.99
-      }
-      to {
-        opacity: 1
-      }
-    }
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
 
-    .chartjs-render-monitor {
-      -webkit-animation: chartjs-render-animation 0.001s;
-      animation: chartjs-render-animation 0.001s;
-    }
-  </style>
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
 
     <!-- 引入echart.js-->
     <!--<script type="text/javascript" src="js/echarts.min.js" th:src="@{/js/echarts.min.js}"></script>-->
@@ -56,78 +56,78 @@
 <!--引入topbar-->
 <div th:replace="commons/bar::topbar"></div>
 <div class="container-fluid">
-  <div class="row">
-    <!--引入sidebar-->
-    <div th:replace="commons/bar::#sidebar(activeUri='main.html')"></div>
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-      <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-          <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-        </div>
-        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-          <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-        </div>
-      </div>
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h2">Odds Ratio值及置信区间</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group mr-2">
-            <button class="btn btn-sm btn-outline-secondary">请你选择你要分析的药物</button>
-          </div>
-            <table hidden id="hiddenTable" cellspacing="0" cellpadding="0">
-                <tr th:each="result:${resultList}">
-                    <td th:text="${result['name']}"></td>
-                    <td th:text="${result['min']}"></td>
-                    <td th:text="${result['max']}"></td>
-                    <td th:text="${result['OR']}"></td>
-                </tr>
-            </table>
-                <div class="dropdown">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        药物名称
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu" id="mydrop">
-                        <li role="presentation">
-                        <a id="ACEI" class="dropdown-item" href="#">ACEI</a>
-                        </li>
-                        <li role="presentation">
-                        <a id="ARB" class="dropdown-item" href="#">ARB</a>
-                        </li>
-                        <li role="presentation">
-                        <a id="Thiazide_diuretic" class="dropdown-item" href="#">Thiazide diuretic</a>
-                        </li>
-                        <li role="presentation">
-                        <a id="Urine_diuretic" class="dropdown-item" href="#">Urine diuretic</a>
-                        </li>
-                        <li role="presentation">
-                            <a class="dropdown-item disabled" href="#">Potassium diuretic</a>
-                        </li>
-                        <li role="presentation">
-                        <a class="dropdown-item disabled" href="#">ARNI</a>
-                        </li>
-                        <li role="presentation">
-                        <a class="dropdown-item disabled" href="#">Receptor antagonist</a>
-                        </li>
-                        <li role="presentation">
-                        <a class="dropdown-item disabled" href="#">Metoprolol</a>
-                        </li>
-                        <li role="presentation">
-                        <a class="dropdown-item disabled" href="#">Bisoprol</a>
-                        </li>
-                        <li role="presentation">
-                        <a class="dropdown-item disabled" href="#">Carvedilol</a>
-                        </li>
-                    </ul>
+    <div class="row">
+        <!--引入sidebar-->
+        <div th:replace="commons/bar::#sidebar(activeUri='main.html')"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
                 </div>
-        </div>
-      </div>
+                <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">Hazard Ratio值及置信区间</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group mr-2">
+                        <button class="btn btn-sm btn-outline-secondary">请你选择你要分析的药物</button>
+                    </div>
+                    <table hidden id="hiddenTable" cellspacing="0" cellpadding="0">
+                        <tr th:each="result:${hazardList}">
+                            <td th:text="${result['name']}"></td>
+                            <td th:text="${result['min']}"></td>
+                            <td th:text="${result['max']}"></td>
+                            <td th:text="${result['HR']}"></td>
+                        </tr>
+                    </table>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            药物名称
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" id="mydrop">
+                            <li role="presentation">
+                                <a id="ACEI" class="dropdown-item" href="#">ACEI</a>
+                            </li>
+                            <li role="presentation">
+                                <a id="ARB" class="dropdown-item" href="#">ARB</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="dropdown-item" href="#">ARNI</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="dropdown-item" href="#">Potassium diuretic</a>
+                            </li>
+                            <li role="presentation">
+                                <a id="Thiazide_diuretic" class="dropdown-item" href="#">Thiazide diuretic</a>
+                            </li>
+                            <li role="presentation">
+                                <a id="Urine_diuretic" class="dropdown-item" href="#">Urine diuretic</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="dropdown-item" href="#">Receptor antagonist</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="dropdown-item disabled" href="#">Metoprolol</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="dropdown-item disabled" href="#">Bisoprol</a>
+                            </li>
+                            <li role="presentation">
+                                <a class="dropdown-item disabled" href="#">Carvedilol</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-      <canvas class="my-4 chartjs-render-monitor" id="myChart" width="1076" height="454" style="display: block; width: 1076px; height: 454px;"></canvas>
+            <canvas class="my-4 chartjs-render-monitor" id="myChart" width="1076" height="454" style="display: block; width: 1076px; height: 454px;"></canvas>
 
 
-    </main>
-  </div>
+        </main>
+    </div>
 </div>
 
 <!-- Icons -->
@@ -146,16 +146,16 @@
                 var name = tdArr.eq(0).text();
                 var min = tdArr.eq(1).text();
                 var max = tdArr.eq(2).text();
-                var or = tdArr.eq(3).text();
-                console.log(name,min,max,or);
+                var hr = tdArr.eq(3).text();
+                console.log(name,min,max,hr);
 
                 if (name.trim() === val.trim()) {
-                    var data = [[or, 1],]
+                    var data = [[hr, 1],]
 
                     var chart = echarts.init(document.getElementById("div-a"));
                     option = {
                         title: {
-                            text: 'Odds Ratio',
+                            text: 'Hazard Ratio',
                         },
                         toolbox: {
                             show: true,
@@ -173,8 +173,8 @@
                                 type: 'value',
                                 scale: true,
                                 min: 0,
-                                max: 9,
-                                splitNumber:9,
+                                max: 3,
+                                splitNumber:6,
                                 splitLine: {
                                     show: false
                                 },
@@ -201,7 +201,7 @@
                         ],
                         series: [
                             {
-                                name: 'OR值',
+                                name: 'HR值',
                                 type: 'scatter',
                                 smooth:true,
                                 data: data,
@@ -226,7 +226,7 @@
 
                             },
                             {
-                                name: 'OR值',
+                                name: 'HR值',
                                 type: 'scatter',
                                 smooth:false,
                                 data: data,
@@ -257,5 +257,5 @@
 </script>
 <div id="div-a" style="width: 900px; height: 600px;"></div>
 </body>
-<script th:src="@{/js/custom/select.js}"></script>
+<!--<script th:src="@{/js/custom/select.js}"></script>-->
 </html>

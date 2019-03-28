@@ -1,7 +1,7 @@
 $(function () {
     $('#selectDrug').click(function (e) {
         e.preventDefault();
-        var url = '/executescript';
+        var url = '/odds';
         var name = $('#name').val();
         var min = $('#min').val();
         var max = $('#max').val();
